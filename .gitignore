@@ -1,0 +1,220 @@
+# ====================
+# Dependencies
+# ====================
+node_modules/
+.pnp
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# ====================
+# Build Outputs
+# ====================
+dist/
+dist-ssr/
+build/
+out/
+*.tsbuildinfo
+*.buildinfo
+
+# ====================
+# Environment Variables
+# ====================
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+!.env.example
+!.env.template
+
+# ====================
+# Logs
+# ====================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ====================
+# Runtime & Temp Files
+# ====================
+pids/
+*.pid
+*.seed
+*.pid.lock
+tmp/
+temp/
+*.tmp
+
+# ====================
+# Testing & Coverage
+# ====================
+coverage/
+.nyc_output/
+*.lcov
+.vitest/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+__snapshots__/
+
+# ====================
+# Cache Directories
+# ====================
+.cache/
+.npm/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+
+# ====================
+# Vite
+# ====================
+vite.config.*.timestamp-*
+*.local
+
+# ====================
+# TypeScript
+# ====================
+*.tsbuildinfo
+next-env.d.ts
+
+# ====================
+# Editor & IDE
+# ====================
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ====================
+# OS Files
+# ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# ====================
+# Package Managers
+# ====================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-store/
+.pnpm-debug.log
+
+# ====================
+# Supabase
+# ====================
+supabase/.branches/
+supabase/.temp/
+
+# ====================
+# Vercel
+# ====================
+.vercel
+.vercel.json
+
+# ====================
+# Monorepo
+# ====================
+.turbo/
+.nx/cache/
+
+# ====================
+# Misc
+# ====================
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+*.bak
+*.backup
+*.old
+.scratch/
+todo.txt
+notes.txt
