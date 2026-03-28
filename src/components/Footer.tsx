@@ -1,5 +1,5 @@
 import zeusLogo from "@/assets/zeus-logo.png";
-import { Twitter, Github, Linkedin, Mail } from "lucide-react";
+import { Github, Globe, Mail } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -16,15 +16,20 @@ export const Footer = () => {
               </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Empowering writers with next-gen AI tools that enhance clarity,
-              tone, and creativity — seamlessly.
+              Open-source AI prompt enhancement for faster, higher-quality LLM
+              outcomes across local and cloud providers.
             </p>
 
             <div className="flex items-center gap-4 mt-6">
-              {[Twitter, Github, Linkedin].map((Icon, idx) => (
+              {[
+                { icon: Github, href: "https://lnkd.in/dspWKsAi" },
+                { icon: Globe, href: "https://lnkd.in/efA29y5h" },
+              ].map(({ icon: Icon, href }, idx) => (
                 <a
                   key={idx}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
                   className="p-2 rounded-full border border-border hover:bg-foreground hover:text-background transition-all duration-300"
                 >
                   <Icon className="h-5 w-5" />
@@ -55,15 +60,38 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#pricing"
+                  href="/#pricing"
                   className="hover:text-foreground transition-colors"
                 >
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a
+                  href="/#chrome-extension"
+                  className="hover:text-foreground transition-colors"
+                >
                   Chrome Extension
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://lnkd.in/dspWKsAi"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
+                  GitHub Repository
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://lnkd.in/efA29y5h"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Chrome Web Store
                 </a>
               </li>
             </ul>
@@ -127,7 +155,7 @@ export const Footer = () => {
 
         {/* Bottom Section */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm">© 2025 Zeus. All rights reserved.</p>
+          <p className="text-sm">© 2026 Zeus. All rights reserved.</p>
           <div className="text-xs flex gap-4">
             <a href="#" className="hover:text-foreground transition-colors">
               Privacy Policy

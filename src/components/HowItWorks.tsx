@@ -4,30 +4,30 @@ import { FileText, Sparkles, CheckCircle, Download } from "lucide-react";
 const steps = [
   {
     icon: FileText,
-    title: "Write or Paste Text",
+    title: "Draft Any Prompt",
     description:
-      "Start typing directly in our editor or paste existing content from anywhere.",
+      "Write a simple prompt inside ChatGPT, Claude, Gemini, DeepSeek, or Grok.",
     number: "",
   },
   {
     icon: Sparkles,
-    title: "AI Analyzes Everything",
+    title: "Click Enhance Prompt",
     description:
-      "Zeus scans your text in real-time for grammar, spelling, style, and tone.",
+      "Use the Zeus button to instantly rewrite your prompt into a structured, high-performing version.",
     number: "",
   },
   {
     icon: CheckCircle,
-    title: "Review Suggestions",
+    title: "Choose Your Provider",
     description:
-      "Accept, reject, or customize AI-powered suggestions with one click.",
+      "Run with OpenAI, Gemini, Claude, OpenRouter, Ollama, or Auto mode with local-first fallback.",
     number: "",
   },
   {
     icon: Download,
-    title: "Export & Share",
+    title: "Use and Iterate",
     description:
-      "Download your polished text or copy it directly to any platform.",
+      "Send the upgraded prompt and iterate faster with better quality answers from any model.",
     number: "",
   },
 ];
@@ -38,14 +38,13 @@ export const HowItWorks = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Writing Excellence in{" "}
+            Prompt Excellence in{" "}
             <span className="bg-gradient-gold bg-clip-text text-transparent">
               4 Simple Steps
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            From draft to masterpiece in seconds. Here's how Zeus works its
-            magic.
+            From raw idea to high-performance prompt in seconds.
           </p>
         </div>
 

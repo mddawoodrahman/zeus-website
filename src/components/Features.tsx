@@ -4,39 +4,39 @@ import { Sparkles, Zap, Shield, Lightbulb, Globe, Layers } from "lucide-react";
 const features = [
   {
     icon: Sparkles,
-    title: "Grammar Perfection",
+    title: "Prompt Intelligence",
     description:
-      "Catch every grammatical error with AI-powered detection that understands context and nuance.",
+      "Turn rough ideas into structured prompts that produce clearer, more reliable model outputs.",
   },
   {
     icon: Zap,
-    title: "Real-Time Corrections",
+    title: "One-Click Enhancement",
     description:
-      "Get instant suggestions as you type. No waiting, no delays—just lightning-fast improvements.",
+      "Inject Zeus directly into supported AI chat inputs and improve prompts instantly.",
   },
   {
     icon: Lightbulb,
-    title: "Style Enhancement",
+    title: "Multi-Provider Support",
     description:
-      "Elevate your writing style with intelligent suggestions for clarity, conciseness, and impact.",
+      "Use OpenAI, Gemini, Claude, OpenRouter, or Ollama through one consistent enhancement flow.",
   },
   {
     icon: Shield,
-    title: "Privacy First",
+    title: "Privacy-First Local AI",
     description:
-      "Your documents stay private. We use end-to-end encryption and never store your content.",
+      "Run enhancements with Ollama locally when privacy is critical and keep cloud use optional.",
   },
   {
     icon: Globe,
-    title: "Works Everywhere",
+    title: "Cross-Site Injection",
     description:
-      "Web app, Chrome extension, and integrations across all your favorite writing platforms.",
+      "Works across ChatGPT, Claude, DeepSeek, Grok, and other supported AI workflows.",
   },
   {
     icon: Layers,
-    title: "Tone Detector",
+    title: "Auto Fallback Mode",
     description:
-      "Ensure your message hits the right tone—professional, friendly, formal, or casual.",
+      "Auto mode prefers local Ollama first, then falls back to cloud providers when needed.",
   },
 ];
 
@@ -46,14 +46,14 @@ export const Features = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Features That{" "}
+            Features Built for{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Supercharge
+              Prompt Engineering
             </span>{" "}
-            Your Writing
+            at Scale
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to write with confidence, clarity, and power.
+            Everything needed to get stronger AI results from better prompts.
           </p>
         </div>
 

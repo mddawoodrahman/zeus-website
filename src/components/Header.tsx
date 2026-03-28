@@ -59,6 +59,12 @@ export const Header = () => {
           >
             Pricing
           </a>
+          <a
+            href="/#chrome-extension"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Extension
+          </a>
           <Link
             to="/about"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -74,6 +80,15 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" asChild className="hidden lg:inline-flex">
+            <a
+              href="https://lnkd.in/efA29y5h"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get Extension
+            </a>
+          </Button>
           <ThemeToggle />
           {!loading && (
             <>

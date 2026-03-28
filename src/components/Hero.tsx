@@ -32,21 +32,22 @@ export const Hero = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">
-              Powered by Advanced AI
+              Now Live: Zeus Chrome Extension
             </span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-            Write with the Power of{" "}
+            Upgrade Any AI Prompt with{" "}
             <span className="bg-gradient-hero bg-clip-text text-transparent">
-              Lightning
+              One Click
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
-            Zeus enhances your writing with real-time grammar corrections, style
-            improvements, and AI-powered suggestions.
+            Zeus transforms simple prompts into high-performing instructions for
+            ChatGPT, Claude, Gemini, and more with OpenAI, Gemini, Claude,
+            OpenRouter, and Ollama support.
           </p>
 
           {/* CTA Buttons */}
@@ -57,28 +58,30 @@ export const Hero = () => {
                 className="text-lg h-14 px-8 shadow-strong hover:shadow-glow transition-all"
               >
                 <Zap className="h-5 w-5 mr-2" />
-                Start Writing Free
+                Open Prompt Studio
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg h-14 px-8">
-              See How It Works
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
+            <a href="/#chrome-extension">
+              <Button size="lg" variant="outline" className="text-lg h-14 px-8">
+                Get Chrome Extension
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </a>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-8 border-t border-border/50">
             <div>
-              <p className="text-3xl font-bold text-primary mb-1">10M+</p>
-              <p className="text-sm text-muted-foreground">Words Enhanced</p>
+              <p className="text-3xl font-bold text-primary mb-1">6</p>
+              <p className="text-sm text-muted-foreground">Providers + Auto</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-gold mb-1">99.9%</p>
-              <p className="text-sm text-muted-foreground">Accuracy Rate</p>
+              <p className="text-3xl font-bold text-gold mb-1">Local</p>
+              <p className="text-sm text-muted-foreground">Ollama Option</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-primary mb-1">24/7</p>
-              <p className="text-sm text-muted-foreground">AI Support</p>
+              <p className="text-3xl font-bold text-primary mb-1">1-Click</p>
+              <p className="text-sm text-muted-foreground">Prompt Rewrite</p>
             </div>
           </div>
         </div>

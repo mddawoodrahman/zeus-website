@@ -1,13 +1,13 @@
-# ⚡ Zeus - AI-Powered Writing Assistant
+# ⚡ Zeus - AI Prompt Enhancer Platform
 
 <div align="center">
   
   <p align="center">
-    <strong>Write with the Power of Lightning</strong>
+    <strong>Upgrade prompts instantly across your favorite AI tools</strong>
   </p>
   
   <p align="center">
-    Zeus enhances your writing with real-time grammar corrections, style improvements, and AI-powered suggestions.
+    Zeus improves prompt quality with a web platform and a dedicated Chrome extension for one-click prompt enhancement.
   </p>
 
   <p align="center">
@@ -24,6 +24,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Chrome Extension](#chrome-extension)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Quick Start](#quick-start)
@@ -52,6 +53,22 @@
 - **Beautiful, responsive UI with light/dark mode**
 
 Perfect for writers, content creators, students, and professionals who want to improve their writing quality instantly.
+
+---
+
+## 🚀 Chrome Extension
+
+Zeus is also available as an open-source Chrome extension focused on prompt engineering.
+
+- Enhances prompts in one click inside supported chat inputs
+- Supports OpenAI, Gemini, Claude, OpenRouter, and Ollama (local)
+- Includes Auto mode (local-first fallback to cloud)
+- Built with a privacy-first option through Ollama
+
+Links:
+
+- GitHub Repository: https://lnkd.in/dspWKsAi
+- Chrome Web Store: https://lnkd.in/efA29y5h
 
 ---
 
@@ -514,10 +531,6 @@ npm i -g netlify-cli
 # Deploy
 netlify deploy --prod
 ```
-
-#### Deploy via Lovable
-
-Simply open [Lovable](https://lovable.dev/projects/0aae388c-9aab-4870-bddf-985cf9597d63) and click on Share → Publish.
 
 #### Deploy to Your Own Server
 
