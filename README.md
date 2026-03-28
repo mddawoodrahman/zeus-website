@@ -372,14 +372,12 @@ Major features recommended for upcoming releases:
 
 ## License and Attribution
 
-Current state: no `LICENSE` file is present in the repository root.
+This project is licensed under the MIT License.
 
-Recommended open-source license: MIT.
+See the `LICENSE` file in the repository root for the full legal text.
 
-MIT attribution requirements (if adopted):
+MIT attribution requirements:
 
-- Include the full MIT license text in a `LICENSE` file.
+- Include the full MIT license text in the `LICENSE` file.
 - Preserve copyright and permission notice in substantial source distributions.
 - Document third-party notices when required by dependency licenses.
-
-For strict compliance, add a committed `LICENSE` file before public distribution.
