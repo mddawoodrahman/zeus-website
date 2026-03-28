@@ -42,7 +42,7 @@ export const ExtensionLaunch = () => {
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Button size="lg" asChild>
                   <a
-                    href="https://lnkd.in/dspWKsAi"
+                    href="https://github.com/mddawoodrahman/zeus"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -52,7 +52,7 @@ export const ExtensionLaunch = () => {
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a
-                    href="https://lnkd.in/efA29y5h"
+                    href="https://chromewebstore.google.com/detail/zeus/nejhojapbopmedoagaimcdmgekjnkoal"
                     target="_blank"
                     rel="noreferrer"
                   >
