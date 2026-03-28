@@ -53,6 +53,7 @@ pids/
 tmp/
 temp/
 *.tmp
+tmp-gh-run-logs/
 
 # ====================
 # Testing & Coverage
@@ -179,6 +180,8 @@ $RECYCLE.BIN/
 # ====================
 # Package Managers
 # ====================
+# Keep npm lockfile tracked for reproducible CI/CD installs.
+!package-lock.json
 yarn.lock
 pnpm-lock.yaml
 .pnpm-store/
