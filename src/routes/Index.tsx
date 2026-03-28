@@ -3,7 +3,6 @@ import { Hero } from "@/components/Hero";
 import { ExtensionLaunch } from "@/components/ExtensionLaunch";
 import { Features } from "@/components/Features";
 import { HowItWorks } from "@/components/HowItWorks";
-import { Pricing } from "@/components/Pricing";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -15,7 +14,6 @@ const Index = () => {
         <ExtensionLaunch />
         <Features />
         <HowItWorks />
-        <Pricing />
       </main>
       <Footer />
     </div>

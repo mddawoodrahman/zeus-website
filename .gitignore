@@ -218,3 +218,6 @@ supabase/.temp/
 .scratch/
 todo.txt
 notes.txt
+
+# clerk configuration (can include secrets)
+/.clerk/

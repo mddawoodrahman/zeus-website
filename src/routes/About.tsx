@@ -1,3 +1,5 @@
+"use client";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,8 +19,9 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import lightningIcon from "@/assets/lightning-icon.png";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+
+const lightningIcon = "/assets/lightning-icon.png";
 
 const values = [
   {
@@ -164,18 +167,18 @@ const About = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/editor">
-                <Button size="lg" className="shadow-glow">
+              <Button size="lg" className="shadow-glow" asChild>
+                <Link href="/editor">
                   <Zap className="h-5 w-5 mr-2" />
                   Try Zeus Free
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button size="lg" variant="outline">
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/contact">
                   Get in Touch
                   <ArrowRight className="h-5 w-5 ml-2" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -417,17 +420,17 @@ const About = () => {
                 communicate better. Start writing with confidence today.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link to="/signup">
-                  <Button size="lg" className="shadow-glow">
+                <Button size="lg" className="shadow-glow" asChild>
+                  <Link href="/signup">
                     <Zap className="h-5 w-5 mr-2" />
                     Get Started Free
-                  </Button>
-                </Link>
-                <Link to="/contact">
-                  <Button size="lg" variant="outline">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/contact">
                     Contact Sales
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           </Card>

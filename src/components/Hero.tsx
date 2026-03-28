@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Zap, Sparkles, ArrowRight } from "lucide-react";
-import lightningIcon from "@/assets/lightning-icon.png";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+
+const lightningIcon = "/assets/lightning-icon.png";
 
 export const Hero = () => {
   return (
@@ -52,21 +53,22 @@ export const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link to="/editor">
-              <Button
-                size="lg"
-                className="text-lg h-14 px-8 shadow-strong hover:shadow-glow transition-all"
-              >
+            <Button
+              size="lg"
+              className="text-lg h-14 px-8 shadow-strong hover:shadow-glow transition-all"
+              asChild
+            >
+              <Link href="/editor">
                 <Zap className="h-5 w-5 mr-2" />
                 Open Prompt Studio
-              </Button>
-            </Link>
-            <a href="/#chrome-extension">
-              <Button size="lg" variant="outline" className="text-lg h-14 px-8">
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg h-14 px-8" asChild>
+              <Link href="/#chrome-extension">
                 Get Chrome Extension
                 <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-            </a>
+              </Link>
+            </Button>
           </div>
 
           {/* Stats */}

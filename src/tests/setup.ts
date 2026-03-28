@@ -8,10 +8,9 @@ afterEach(() => {
 });
 
 // Mock environment variables for testing
-process.env.VITE_SUPABASE_URL =
-  process.env.VITE_SUPABASE_URL || "https://test.supabase.co";
-process.env.VITE_SUPABASE_ANON_KEY =
-  process.env.VITE_SUPABASE_ANON_KEY || "test-anon-key";
+process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_mock";
+process.env.CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY || "sk_test_mock";
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {

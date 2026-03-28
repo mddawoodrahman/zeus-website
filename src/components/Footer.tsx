@@ -1,5 +1,7 @@
-import zeusLogo from "@/assets/zeus-logo.png";
 import { Github, Globe, Mail } from "lucide-react";
+import Link from "next/link";
+
+const zeusLogo = "/assets/zeus-logo.png";
 
 export const Footer = () => {
   return (
@@ -10,7 +12,7 @@ export const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <img src={zeusLogo} alt="Zeus Logo" className="h-9 w-9" />
+                <img src={zeusLogo} alt="Zeus Logo" className="h-9 w-9" />
               <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Zeus
               </span>
@@ -43,36 +45,28 @@ export const Footer = () => {
             <h3 className="font-semibold text-foreground mb-4">Product</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#features"
+                <Link
+                  href="/#features"
                   className="hover:text-foreground transition-colors"
                 >
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#how-it-works"
+                <Link
+                  href="/#how-it-works"
                   className="hover:text-foreground transition-colors"
                 >
                   How It Works
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#pricing"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
+                <Link
                   href="/#chrome-extension"
                   className="hover:text-foreground transition-colors"
                 >
                   Chrome Extension
-                </a>
+                </Link>
               </li>
               <li>
                 <a
@@ -102,12 +96,12 @@ export const Footer = () => {
             <h3 className="font-semibold text-foreground mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
+                <Link
                   href="/about"
                   className="hover:text-foreground transition-colors"
                 >
                   About
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-foreground transition-colors">
@@ -120,12 +114,12 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                <a
+                <Link
                   href="/contact"
                   className="hover:text-foreground transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

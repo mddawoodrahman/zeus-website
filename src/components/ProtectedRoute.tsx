@@ -1,5 +1,8 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+"use client";
+
+import { useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
@@ -17,11 +20,19 @@ interface ProtectedRouteProps {
  * } />
  */
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
-  const location = useLocation();
+  const { userId, isLoaded } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (isLoaded && !userId) {
+      const callbackUrl = encodeURIComponent(pathname || "/");
+      router.replace(`/signin?callbackUrl=${callbackUrl}`);
+    }
+  }, [isLoaded, pathname, router, userId]);
 
   // Show loading spinner while checking authentication
-  if (loading) {
+  if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
@@ -32,10 +43,8 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  // Redirect to sign in if not authenticated
-  // Preserve the intended destination in state so we can redirect back after login
-  if (!user) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+  if (!userId) {
+    return null;
   }
 
   // User is authenticated, render the protected content

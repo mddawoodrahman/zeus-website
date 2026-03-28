@@ -20,6 +20,11 @@ import OpenAI from "openai";
 
 // Storage key for API key
 const OPENAI_KEY_STORAGE = "zeus_openai_api_key";
+const OPENAI_PROXY_ENDPOINT = "/api/enhance";
+const OPENAI_PROXY_ENABLED = process.env.NEXT_PUBLIC_OPENAI_SERVER_PROXY !== "false";
+const FORCE_STRICT_SERVER_ONLY =
+  process.env.NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY === "true";
+let strictServerOnlyCache: boolean | null = FORCE_STRICT_SERVER_ONLY ? true : null;
 
 /**
  * Retrieves the stored OpenAI API key from localStorage
@@ -66,12 +71,70 @@ export const hasAPIKey = (): boolean => {
   return !!getStoredAPIKey();
 };
 
+interface ProxyPayload {
+  action: "analyze" | "enhance" | "complete" | "validate" | "config";
+  text?: string;
+  prompt?: string;
+  systemPrompt?: string;
+  options?: EnhanceOptions;
+}
+
+const callOpenAIProxy = async <T>(
+  payload: ProxyPayload,
+  includeApiKey = true,
+): Promise<T> => {
+  const apiKey = includeApiKey ? getStoredAPIKey() : null;
+  const response = await fetch(OPENAI_PROXY_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(apiKey ? { "x-openai-key": apiKey } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = (await response.json()) as { error?: string } & T;
+
+  if (!response.ok) {
+    throw new Error(result.error || "OpenAI proxy request failed");
+  }
+
+  return result;
+};
+
+const getStrictServerOnlyMode = async (): Promise<boolean> => {
+  if (strictServerOnlyCache !== null) {
+    return strictServerOnlyCache;
+  }
+
+  if (!OPENAI_PROXY_ENABLED) {
+    strictServerOnlyCache = false;
+    return false;
+  }
+
+  try {
+    const proxied = await callOpenAIProxy<{ strictServerOnly?: boolean }>(
+      { action: "config" },
+      false,
+    );
+    strictServerOnlyCache = Boolean(proxied.strictServerOnly);
+    return strictServerOnlyCache;
+  } catch {
+    strictServerOnlyCache = FORCE_STRICT_SERVER_ONLY;
+    return strictServerOnlyCache;
+  }
+};
+
+const shouldFallbackToBrowser = async (): Promise<boolean> => {
+  return !(await getStrictServerOnlyMode());
+};
+
 /**
- * Creates an OpenAI client instance with the stored API key
+ * Creates a browser OpenAI client instance as a fallback.
  * @returns {OpenAI} Configured OpenAI client
  * @throws {Error} If API key is not set
  */
-const createClient = (): OpenAI => {
+const createBrowserClient = (): OpenAI => {
   const apiKey = getStoredAPIKey();
 
   if (!apiKey) {
@@ -82,7 +145,8 @@ const createClient = (): OpenAI => {
 
   return new OpenAI({
     apiKey,
-    dangerouslyAllowBrowser: true, // Required for client-side usage
+    // Preferred path is server proxy. This browser mode is only a compatibility fallback.
+    dangerouslyAllowBrowser: true,
   });
 };
 
@@ -140,7 +204,28 @@ export interface Suggestion {
  * @returns {Promise<Suggestion[]>} Array of suggestions
  */
 export const analyzeText = async (text: string): Promise<Suggestion[]> => {
-  const client = createClient();
+  if (OPENAI_PROXY_ENABLED) {
+    try {
+      const proxied = await callOpenAIProxy<{ suggestions: Suggestion[] }>({
+        action: "analyze",
+        text,
+      });
+      return proxied.suggestions || [];
+    } catch (error) {
+      if (await shouldFallbackToBrowser()) {
+        console.warn(
+          "OpenAI proxy analyze failed, falling back to browser client",
+          error,
+        );
+      } else {
+        throw new Error(
+          "OpenAI proxy is in strict server mode; browser fallback is disabled.",
+        );
+      }
+    }
+  }
+
+  const client = createBrowserClient();
 
   try {
     const completion = await client.chat.completions.create({
@@ -202,7 +287,28 @@ export const enhanceText = async (
   text: string,
   options: EnhanceOptions,
 ): Promise<EnhanceResult> => {
-  const client = createClient();
+  if (OPENAI_PROXY_ENABLED) {
+    try {
+      return await callOpenAIProxy<EnhanceResult>({
+        action: "enhance",
+        text,
+        options,
+      });
+    } catch (error) {
+      if (await shouldFallbackToBrowser()) {
+        console.warn(
+          "OpenAI proxy enhance failed, falling back to browser client",
+          error,
+        );
+      } else {
+        throw new Error(
+          "OpenAI proxy is in strict server mode; browser fallback is disabled.",
+        );
+      }
+    }
+  }
+
+  const client = createBrowserClient();
 
   const prompts: Record<EnhancementType, string> = {
     grammar:
@@ -282,7 +388,31 @@ export const streamCompletion = async (
   onChunk: StreamCallback,
   systemPrompt?: string,
 ): Promise<void> => {
-  const client = createClient();
+  if (OPENAI_PROXY_ENABLED) {
+    try {
+      const proxied = await callOpenAIProxy<{ result: string }>({
+        action: "complete",
+        prompt,
+        systemPrompt,
+      });
+      onChunk(proxied.result || "", false);
+      onChunk("", true);
+      return;
+    } catch (error) {
+      if (await shouldFallbackToBrowser()) {
+        console.warn(
+          "OpenAI proxy stream failed, falling back to browser client",
+          error,
+        );
+      } else {
+        throw new Error(
+          "OpenAI proxy is in strict server mode; browser fallback is disabled.",
+        );
+      }
+    }
+  }
+
+  const client = createBrowserClient();
 
   try {
     const stream = await client.chat.completions.create({
@@ -322,7 +452,29 @@ export const completeText = async (
   prompt: string,
   systemPrompt?: string,
 ): Promise<string> => {
-  const client = createClient();
+  if (OPENAI_PROXY_ENABLED) {
+    try {
+      const proxied = await callOpenAIProxy<{ result: string }>({
+        action: "complete",
+        prompt,
+        systemPrompt,
+      });
+      return proxied.result || "";
+    } catch (error) {
+      if (await shouldFallbackToBrowser()) {
+        console.warn(
+          "OpenAI proxy complete failed, falling back to browser client",
+          error,
+        );
+      } else {
+        throw new Error(
+          "OpenAI proxy is in strict server mode; browser fallback is disabled.",
+        );
+      }
+    }
+  }
+
+  const client = createBrowserClient();
 
   try {
     const completion = await client.chat.completions.create({
@@ -382,8 +534,29 @@ const handleOpenAIError = (error: unknown): Error => {
  * @returns {Promise<boolean>} True if API key is valid
  */
 export const testAPIKey = async (): Promise<boolean> => {
+  if (OPENAI_PROXY_ENABLED) {
+    try {
+      const proxied = await callOpenAIProxy<{ ok: boolean; strictServerOnly?: boolean }>({
+        action: "validate",
+      });
+      if (typeof proxied.strictServerOnly === "boolean") {
+        strictServerOnlyCache = proxied.strictServerOnly;
+      }
+      return proxied.ok;
+    } catch (error) {
+      if (await shouldFallbackToBrowser()) {
+        console.warn(
+          "OpenAI proxy key validation failed, falling back to browser client",
+          error,
+        );
+      } else {
+        return false;
+      }
+    }
+  }
+
   try {
-    const client = createClient();
+    const client = createBrowserClient();
     await client.models.list();
     return true;
   } catch (error) {

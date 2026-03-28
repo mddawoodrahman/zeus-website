@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +31,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import { ApiKeySetupDialog } from "@/components/ApiKeySetupDialog";
 import {
@@ -49,10 +51,13 @@ import {
   type EnhancementType,
 } from "@/lib/openai";
 
-const Editor = () => {
-  const { user } = useAuth();
-  const [searchParams] = useSearchParams();
-  const documentId = searchParams.get("id");
+interface EditorProps {
+  documentId?: string | null;
+}
+
+const Editor = ({ documentId = null }: EditorProps) => {
+  const { user } = useUser();
+  const router = useRouter();
 
   const [currentDocument, setCurrentDocument] = useState<DocType | null>(null);
   const [title, setTitle] = useState("Untitled Document");
@@ -205,8 +210,7 @@ const Editor = () => {
         // Create new document
         const newDoc = await createDocument(user.id, title, text);
         setCurrentDocument(newDoc);
-        // Update URL with document ID without reloading
-        window.history.replaceState({}, "", `/editor?id=${newDoc.id}`);
+        router.replace(`/editor?id=${newDoc.id}`);
         if (!silent) toast.success("Document created!");
       }
     } catch (error) {

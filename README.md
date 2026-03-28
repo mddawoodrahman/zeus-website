@@ -1,618 +1,385 @@
-# ⚡ Zeus - AI Prompt Enhancer Platform
+# Zeus Website
 
-<div align="center">
-  
-  <p align="center">
-    <strong>Upgrade prompts instantly across your favorite AI tools</strong>
-  </p>
-  
-  <p align="center">
-    Zeus improves prompt quality with a web platform and a dedicated Chrome extension for one-click prompt enhancement.
-  </p>
+Zeus Website is a Next.js App Router application that combines a marketing surface, authenticated user flows, and an AI-assisted text editor. The project is designed for iterative product delivery with modern frontend tooling, test automation, and CI/CD workflows.
 
-  <p align="center">
-    <a href="#features">Features</a> •
-    <a href="#quick-start">Quick Start</a> •
-    <a href="#installation">Installation</a> •
-    <a href="#usage">Usage</a> •
-    <a href="#documentation">Documentation</a>
-  </p>
-</div>
+## Table of Contents
 
----
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Chrome Extension](#chrome-extension)
-- [Features](#features)
+- [Project Overview](#project-overview)
 - [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
+- [Dependencies and Requirements](#dependencies-and-requirements)
 - [Project Structure](#project-structure)
-- [Documentation](#documentation)
-- [Development](#development)
-- [Building for Production](#building-for-production)
-- [Contributing](#contributing)
-- [License](#license)
+- [Architecture Summary](#architecture-summary)
+- [Automation and DevOps](#automation-and-devops)
+- [Setup and Local Development](#setup-and-local-development)
+- [Usage Examples](#usage-examples)
+- [Deployment Options and Scalability Notes](#deployment-options-and-scalability-notes)
+- [Security Considerations](#security-considerations)
+- [Contributing Guidelines](#contributing-guidelines)
+- [Contribution Roadmap](#contribution-roadmap)
+- [License and Attribution](#license-and-attribution)
 
----
+## Project Overview
 
-## 🎯 Overview
+Zeus provides two primary value streams:
 
-**Zeus** is a modern, AI-powered writing assistant web application that helps users write better content with real-time feedback. Built with React, TypeScript, and Supabase, Zeus provides:
+1. A conversion-oriented marketing site for the Zeus ecosystem and Chrome extension distribution.
+2. A writing and prompt enhancement experience where users can analyze and improve text with OpenAI-backed processing.
 
-- **Real-time grammar and spelling corrections**
-- **Style and clarity improvements**
-- **Tone detection and suggestions**
-- **Document management with auto-save**
-- **Writing session tracking and analytics**
-- **Secure user authentication**
-- **Beautiful, responsive UI with light/dark mode**
+Key product features:
 
-Perfect for writers, content creators, students, and professionals who want to improve their writing quality instantly.
+- Clerk-based authentication, route protection, and account-aware pages.
+- AI text analysis and enhancement with multiple enhancement modes.
+- API proxy pattern (`app/api/enhance/route.ts`) for server-mediated OpenAI operations.
+- Local persistence of editor artifacts through `localStorage` data abstractions.
+- Test automation across unit and browser-level e2e flows.
 
----
+Unique value proposition:
 
-## 🚀 Chrome Extension
+- The system supports server-proxy-first AI calls while preserving a compatibility fallback path for browser-side key usage during transition periods. This enables gradual hardening without abrupt user impact.
 
-Zeus is also available as an open-source Chrome extension focused on prompt engineering.
+## Tech Stack
 
-- Enhances prompts in one click inside supported chat inputs
-- Supports OpenAI, Gemini, Claude, OpenRouter, and Ollama (local)
-- Includes Auto mode (local-first fallback to cloud)
-- Built with a privacy-first option through Ollama
+### Languages and Runtime
 
-Links:
+- TypeScript
+- JavaScript (tooling/runtime scripts)
+- Node.js 20 (CI target runtime)
 
-- GitHub Repository: https://lnkd.in/dspWKsAi
-- Chrome Web Store: https://lnkd.in/efA29y5h
+### Frameworks and Core Libraries
 
----
+- Next.js 15 (App Router)
+- React 18
+- Clerk (`@clerk/nextjs`) for auth and middleware protection
+- OpenAI SDK (`openai`) for text model interaction
+- TanStack Query for client-side data coordination
 
-## ✨ Features
+### UI and Design System
 
-### 🖊️ Writing Enhancement
+- Tailwind CSS
+- Radix UI primitives (accordion, dialog, menu, tabs, and related packages)
+- `next-themes` for theme switching
+- `lucide-react` icon system
+- `sonner` and shadcn-style UI composition under `src/components/ui`
 
-- **Grammar Perfection** - AI-powered detection that understands context and nuance
-- **Real-Time Corrections** - Instant suggestions as you type with lightning-fast processing
-- **Style Enhancement** - Intelligent suggestions for clarity, conciseness, and impact
-- **Tone Detector** - Ensure your message hits the right tone (professional, friendly, formal, or casual)
-- **Spelling Checker** - Advanced spell checking with context-aware suggestions
+### Form, Validation, and Editor Tooling
 
-### 📝 Document Management
+- `react-hook-form`
+- `zod` and `@hookform/resolvers`
+- Monaco Editor (`@monaco-editor/react`, `monaco-editor`)
 
-- **Auto-Save** - Documents automatically save every 30 seconds
-- **Unlimited Storage** - Save all your documents in the cloud (subscription-based)
-- **Organization** - Organize documents with folders and tags
-- **Favorites** - Mark important documents for quick access
-- **Search** - Full-text search across all your documents
-- **Export** - Download documents in various formats (.txt, .docx, .pdf)
+### Quality and Developer Tooling
 
-### 📊 Analytics & Insights
+- ESLint
+- Vitest (`vitest`, `@vitest/ui`, `@vitest/coverage-v8`)
+- Testing Library (`@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`)
+- Playwright (`@playwright/test`)
 
-- **Writing Sessions** - Track your writing productivity and progress
-- **Word Count Tracking** - Monitor words written and characters typed
-- **Quality Scores** - Grammar and clarity scores for each document
-- **Dashboard Stats** - View your writing statistics and achievements
+## Dependencies and Requirements
 
-### 🔐 Security & Privacy
+### System Requirements
 
-- **User Authentication** - Secure sign-up, login, and password reset
-- **Row Level Security** - Your documents are protected at the database level
-- **Session Management** - Automatic token refresh and secure session handling
-- **Privacy First** - Your documents stay private with end-to-end encryption
+- Node.js 20 or newer recommended.
+- npm for automation and CI parity.
+- A modern browser for local verification.
 
-### 🎨 User Experience
+### Third-Party Services
 
-- **Modern UI** - Beautiful interface built with Shadcn/ui components
-- **Dark Mode** - Full light/dark theme support
-- **Responsive Design** - Works perfectly on desktop, tablet, and mobile
-- **Toast Notifications** - Clear feedback for all actions
-- **Loading States** - Smooth loading indicators throughout the app
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- **[React 18](https://react.dev/)** - Modern UI library with hooks
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Vite](https://vitejs.dev/)** - Lightning-fast build tool and dev server
-- **[React Router](https://reactrouter.com/)** - Client-side routing
-- **[TanStack Query](https://tanstack.com/query)** - Powerful data fetching and caching
-
-### UI Components & Styling
-
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Shadcn/ui](https://ui.shadcn.com/)** - High-quality React components
-- **[Radix UI](https://www.radix-ui.com/)** - Accessible component primitives
-- **[Lucide Icons](https://lucide.dev/)** - Beautiful icon library
-- **[next-themes](https://github.com/pacocoursey/next-themes)** - Theme management
-
-### Backend & Database
-
-- **[Supabase](https://supabase.com/)** - PostgreSQL database, authentication, and real-time subscriptions
-- **PostgreSQL** - Powerful relational database with advanced features
-- **Row Level Security** - Database-level security policies
-
-### Form & Validation
-
-- **[React Hook Form](https://react-hook-form.com/)** - Performant form handling
-- **[Zod](https://zod.dev/)** - TypeScript-first schema validation
-- **[@hookform/resolvers](https://github.com/react-hook-form/resolvers)** - Form validation integration
-
-### Development Tools
-
-- **[ESLint](https://eslint.org/)** - Code linting and quality
-- **[PostCSS](https://postcss.org/)** - CSS transformation
-- **[Autoprefixer](https://github.com/postcss/autoprefixer)** - CSS vendor prefixing
-
----
-
-## 🚀 Quick Start
-
-Get Zeus running locally in 5 minutes:
-
-```bash
-# 1. Clone the repository
-git clone <YOUR_GIT_URL>
-cd zeus-writing-assistant
-
-# 2. Install dependencies
-npm install
-
-# 3. Set up environment variables
-cp .env.example .env
-# Edit .env and add your Supabase credentials
-
-# 4. Start the development server
-npm run dev
-
-# 5. Open your browser
-# Visit http://localhost:8080
-```
-
----
-
-## 📦 Installation
-
-### Prerequisites
-
-- **Node.js** 18+ and npm/yarn/pnpm
-- **Supabase Account** (free tier available at [supabase.com](https://supabase.com))
-- **Git** for version control
-
-### Step-by-Step Installation
-
-#### 1. Clone the Repository
-
-```bash
-git clone <YOUR_GIT_URL>
-cd zeus-writing-assistant
-```
-
-#### 2. Install Dependencies
-
-Using npm:
-
-```bash
-npm install
-```
-
-Using yarn:
-
-```bash
-yarn install
-```
-
-Using pnpm:
-
-```bash
-pnpm install
-```
-
-#### 3. Set Up Supabase
-
-1. **Create a Supabase Project**
-   - Go to [supabase.com](https://supabase.com)
-   - Click "New Project"
-   - Fill in project details
-
-2. **Get Your Credentials**
-   - Go to Project Settings > API
-   - Copy your Project URL and anon/public key
-
-3. **Run Database Migration**
-   - Go to SQL Editor in Supabase dashboard
-   - Copy contents of `supabase/migrations/20250105_zeus_initial_schema.sql`
-   - Run the migration
-
-#### 4. Configure Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-Replace the placeholder values with your actual Supabase credentials.
-
-#### 5. Start Development Server
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:8080`
-
----
-
-## ⚙️ Configuration
+- Clerk account and keys for authentication-enabled flows.
+- OpenAI API access for enhancement and analysis features.
+- Optional Vercel account/token for CD deployment.
 
 ### Environment Variables
 
-| Variable                 | Description                        | Required |
-| ------------------------ | ---------------------------------- | -------- |
-| `VITE_SUPABASE_URL`      | Your Supabase project URL          | Yes      |
-| `VITE_SUPABASE_ANON_KEY` | Your Supabase anonymous/public key | Yes      |
+Defined in `.env.example`:
 
-### Supabase Configuration
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Yes (for auth) | Clerk publishable key used by client auth components |
+| `CLERK_SECRET_KEY` | Yes (for auth) | Clerk server key for middleware and server-side auth |
+| `OPENAI_API_KEY` | Recommended | Server-side key for `/api/enhance` proxy strict mode |
+| `NEXT_PUBLIC_OPENAI_SERVER_PROXY` | Optional | `true` by default; set `false` to force legacy browser path |
+| `NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY` | Optional | When `true`, blocks browser fallback and enforces proxy-only behavior |
 
-The database schema includes:
+### Dependency Diagram
 
-- **user_profiles** - Extended user information
-- **documents** - User documents with content and metadata
-- **writing_sessions** - Writing activity tracking
-- **suggestions** - AI-generated writing suggestions
-- **analytics** - Usage analytics and events
-
-See [`DATABASE_GUIDE.md`](./DATABASE_GUIDE.md) for detailed schema documentation.
-
-### Authentication Configuration
-
-Authentication is configured in `src/lib/supabase.ts` with:
-
-- Email/password authentication
-- Automatic session refresh
-- Session persistence across page reloads
-- Secure token storage
-
-See [`AUTHENTICATION_SETUP.md`](./AUTHENTICATION_SETUP.md) for authentication details.
-
----
-
-## 📖 Usage
-
-### For Users
-
-#### Creating an Account
-
-1. Click "Try Zeus" or "Sign Up" in the header
-2. Fill in your details (name, email, password)
-3. Verify your email (if enabled)
-4. Sign in and start writing!
-
-#### Using the Editor
-
-1. Navigate to `/editor` or click "Start Writing"
-2. Enter your document title
-3. Start typing your content
-4. Click "Enhance Text" to get AI suggestions
-5. Review and apply suggestions from the side panel
-6. Documents auto-save every 30 seconds
-
-#### Managing Documents
-
-- Documents are automatically saved to your account
-- Use folders and tags to organize documents
-- Mark favorites for quick access
-- Search across all your documents
-- Export documents in various formats
-
-### For Developers
-
-#### Using the Authentication Context
-
-```tsx
-import { useAuth } from "@/contexts/AuthContext";
-
-function MyComponent() {
-  const { user, signIn, signOut, loading } = useAuth();
-
-  if (loading) return <div>Loading...</div>;
-
-  if (!user) {
-    return <button onClick={() => signIn(email, password)}>Sign In</button>;
-  }
-
-  return (
-    <div>
-      <p>Welcome, {user.email}</p>
-      <button onClick={signOut}>Sign Out</button>
-    </div>
-  );
-}
+```mermaid
+graph TD
+    A[Next.js App Router] --> B[React 18 UI]
+    A --> C[API Route /api/enhance]
+    B --> D[Clerk Client SDK]
+    A --> E[Clerk Middleware]
+    B --> F[TanStack Query]
+    B --> G[Tailwind + Radix UI]
+    B --> H[Monaco Editor]
+    C --> I[OpenAI SDK]
+    I --> J[OpenAI Models gpt-4o / gpt-4o-mini]
+    B --> K[Local Storage Data Layer]
+    L[Vitest + Testing Library] --> B
+    M[Playwright] --> A
+    N[GitHub Actions CI] --> L
+    N --> M
+    N --> O[Next Build]
+    P[GitHub Actions CD] --> Q[Vercel Deploy]
 ```
 
-#### Using Database Functions
+## Project Structure
 
-```tsx
-import {
-  createDocument,
-  getUserDocuments,
-  updateDocument,
-} from "@/lib/database";
+High-level structure and ownership boundaries:
 
-// Create a new document
-const doc = await createDocument(userId, "My Title", "Content here");
-
-// Get all user documents
-const documents = await getUserDocuments(userId);
-
-// Update a document
-await updateDocument(docId, {
-  title: "New Title",
-  content: "Updated content",
-});
+```text
+.
+├─ app/                        # Next.js App Router entrypoints and API routes
+│  ├─ api/enhance/route.ts     # OpenAI proxy endpoint (analyze/enhance/complete)
+│  ├─ about/page.tsx
+│  ├─ contact/page.tsx
+│  ├─ dashboard/page.tsx
+│  ├─ editor/page.tsx
+│  ├─ signin/page.tsx
+│  ├─ signup/page.tsx
+│  ├─ layout.tsx
+│  └─ page.tsx
+├─ src/
+│  ├─ components/              # Shared UI and feature components
+│  ├─ lib/
+│  │  ├─ openai.ts             # Proxy-first OpenAI client wrapper with fallback logic
+│  │  ├─ database.ts           # localStorage-backed data abstraction
+│  │  └─ utils.ts
+│  ├─ routes/                  # Feature route components mounted by app pages
+│  └─ tests/
+│     ├─ setup.ts              # Unit test setup and environment mocks
+│     └─ unit/utils.test.ts
+├─ tests/e2e/homepage.spec.ts  # Playwright smoke test
+├─ middleware.ts               # Clerk route protection and public route matcher
+├─ .github/workflows/
+│  ├─ ci.yml                   # Lint/test/build/e2e automation
+│  └─ cd.yml                   # Optional Vercel deployment
+├─ vitest.config.ts
+├─ playwright.config.ts
+└─ README.md
 ```
 
-#### Protected Routes
+## Architecture Summary
 
-```tsx
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+- Routing model: Next.js App Router with route-level files under `app/`.
+- Auth model: Clerk provider in root layout with middleware enforcement and public-route exemptions.
+- AI model access: Proxy-first through `app/api/enhance/route.ts`, with optional fallback path in `src/lib/openai.ts`.
+- Persistence model: Browser `localStorage` through typed helper methods (`src/lib/database.ts`).
+- UI model: Componentized React + Radix primitives + Tailwind-driven styling.
 
-<Route
-  path="/dashboard"
-  element={
-    <ProtectedRoute>
-      <Dashboard />
-    </ProtectedRoute>
-  }
-/>;
-```
+The `/api/enhance` endpoint supports these actions:
 
----
+- `analyze`
+- `enhance`
+- `complete`
+- `validate`
+- `config`
 
-## 📁 Project Structure
+This supports both API key validation and runtime feature negotiation for strict server mode.
 
-```
-zeus-writing-assistant/
-├── public/                      # Static assets
-│   └── robots.txt
-├── src/
-│   ├── assets/                  # Images, logos, icons
-│   ├── components/              # React components
-│   │   ├── ui/                  # Shadcn/ui components
-│   │   ├── Features.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Header.tsx
-│   │   ├── Hero.tsx
-│   │   ├── HowItWorks.tsx
-│   │   ├── Pricing.tsx
-│   │   ├── ProtectedRoute.tsx
-│   │   ├── ThemeProvider.tsx
-│   │   └── ThemeToggle.tsx
-│   ├── contexts/                # React contexts
-│   │   └── AuthContext.tsx      # Authentication state
-│   ├── hooks/                   # Custom React hooks
-│   │   ├── use-mobile.tsx
-│   │   └── use-toast.ts
-│   ├── lib/                     # Utility functions
-│   │   ├── database.ts          # Database helper functions
-│   │   ├── supabase.ts          # Supabase client
-│   │   └── utils.ts             # General utilities
-│   ├── pages/                   # Page components
-│   │   ├── Editor.tsx           # Main editor page
-│   │   ├── Index.tsx            # Landing page
-│   │   ├── NotFound.tsx         # 404 page
-│   │   ├── SignIn.tsx           # Login page
-│   │   └── SignUp.tsx           # Registration page
-│   ├── App.tsx                  # Main app component
-│   ├── main.tsx                 # App entry point
-│   └── index.css                # Global styles
-├── supabase/
-│   └── migrations/              # Database migrations
-│       └── 20250105_zeus_initial_schema.sql
-├── .env.example                 # Environment template
-├── components.json              # Shadcn/ui config
-├── eslint.config.js             # ESLint configuration
-├── package.json                 # Dependencies
-├── postcss.config.js            # PostCSS config
-├── tailwind.config.ts           # Tailwind CSS config
-├── tsconfig.json                # TypeScript config
-├── vite.config.ts               # Vite configuration
-├── AUTH_IMPLEMENTATION_SUMMARY.md
-├── AUTHENTICATION_SETUP.md
-├── AUTH_QUICK_START.md
-├── DATABASE_GUIDE.md
-└── README.md                    # This file
-```
+## Automation and DevOps
 
----
+### CI Pipeline
 
-## 📚 Documentation
+`/.github/workflows/ci.yml` executes on:
 
-Additional documentation is available:
+- `push` to `main` and `develop`
+- all pull requests
 
-- **[Authentication Setup](./AUTHENTICATION_SETUP.md)** - Complete authentication guide
-- **[Auth Quick Start](./AUTH_QUICK_START.md)** - 5-minute setup guide
-- **[Auth Implementation Summary](./AUTH_IMPLEMENTATION_SUMMARY.md)** - What's implemented
-- **[Database Guide](./DATABASE_GUIDE.md)** - Database schema and usage
-- **[Auth Flow Diagram](./AUTH_FLOW_DIAGRAM.md)** - Authentication flow visualization
+CI stages:
 
----
+1. Checkout
+2. Node.js 20 setup with npm cache
+3. `npm ci`
+4. `npm run lint`
+5. `npm run test:unit`
+6. `npm run build`
+7. Playwright browser install
+8. `npm run test:e2e`
 
-## 🔧 Development
+CI also injects dummy Clerk keys so auth-dependent pages do not fail build/test due to missing secrets.
 
-### Available Scripts
+### CD Pipeline
+
+`/.github/workflows/cd.yml` executes on push to `main` and deploys to Vercel when secrets are available:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Deployment is safely skipped when required Vercel secrets are not configured.
+
+## Setup and Local Development
+
+### 1. Install Dependencies
 
 ```bash
-# Start development server (http://localhost:8080)
+npm install
+```
+
+### 2. Configure Environment
+
+Create `.env` or `.env.local` using `.env.example`:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_example
+CLERK_SECRET_KEY=sk_test_example
+OPENAI_API_KEY=
+NEXT_PUBLIC_OPENAI_SERVER_PROXY=true
+NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY=false
+```
+
+### 3. Start the Development Server
+
+```bash
 npm run dev
+```
 
-# Build for production
-npm run build
+Default URL:
 
-# Build for development (with source maps)
-npm run build:dev
+```text
+http://localhost:8080
+```
 
-# Preview production build
-npm run preview
+### 4. Verify Quality Gates Locally
 
-# Run ESLint
+```bash
 npm run lint
-```
-
-### Development Server
-
-The development server runs on `http://localhost:8080` and includes:
-
-- Hot Module Replacement (HMR)
-- Fast refresh for React components
-- TypeScript type checking
-- ESLint integration
-
-### Code Quality
-
-- **TypeScript** - Full type safety throughout the codebase
-- **ESLint** - Code linting with React and TypeScript rules
-- **Prettier** - Code formatting (if configured)
-- **Component Tagging** - Development-only component tagging for debugging
-
-### Adding New Features
-
-1. **Create UI Components** in `src/components/`
-2. **Add Pages** in `src/pages/`
-3. **Define Routes** in `src/App.tsx`
-4. **Add Database Functions** in `src/lib/database.ts`
-5. **Update Database Schema** in `supabase/migrations/`
-
----
-
-## 🏗️ Building for Production
-
-### Build the Application
-
-```bash
+npm run test:unit
+npm run test:e2e
 npm run build
 ```
 
-This creates an optimized production build in the `dist/` directory.
+## Usage Examples
 
-### Preview Production Build
+### Run Full Test Stack
 
 ```bash
-npm run preview
+npm run test:all
 ```
 
-### Deployment Options
+Expected output pattern:
 
-#### Deploy to Vercel
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
+```text
+> npm run test:unit && npm run test:e2e
+... unit tests passed ...
+... 1 passed (Playwright e2e) ...
 ```
 
-#### Deploy to Netlify
+### Call Enhance API (analyze action)
 
 ```bash
-# Install Netlify CLI
-npm i -g netlify-cli
-
-# Deploy
-netlify deploy --prod
+curl -X POST http://localhost:8080/api/enhance \
+  -H "Content-Type: application/json" \
+  -H "x-openai-key: sk-your-key" \
+  -d '{
+    "action": "analyze",
+    "text": "This are an example sentence with grammar issue."
+  }'
 ```
 
-#### Deploy to Your Own Server
+### Call Enhance API (enhance action)
 
 ```bash
-# Build the app
+curl -X POST http://localhost:8080/api/enhance \
+  -H "Content-Type: application/json" \
+  -H "x-openai-key: sk-your-key" \
+  -d '{
+    "action": "enhance",
+    "text": "Please improve this note for a client update.",
+    "options": {
+      "type": "professional",
+      "preserveFormatting": true
+    }
+  }'
+```
+
+### Check Proxy Configuration Mode
+
+```bash
+curl -X POST http://localhost:8080/api/enhance \
+  -H "Content-Type: application/json" \
+  -d '{"action":"config"}'
+```
+
+## Deployment Options and Scalability Notes
+
+### Option 1: GitHub Actions CD to Vercel
+
+- Recommended for teams already using Vercel.
+- Uses `cd.yml` with secret-gated deployment.
+- Production deploy command: `npx vercel --prod --yes --token "$VERCEL_TOKEN"`.
+
+### Option 2: Self-Hosted Node Runtime
+
+```bash
+npm ci
 npm run build
-
-# Upload the dist/ folder to your server
-# Configure your server to serve index.html for all routes
+npm run start
 ```
 
-### Environment Variables in Production
+This serves the built Next.js app on port 8080.
 
-Make sure to set these environment variables in your hosting platform:
+### Scalability Notes
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- Current localStorage persistence does not support multi-device sync; migrate to a managed datastore for horizontal scale.
+- Move fully to strict server-only OpenAI mode for centralized key management and observability.
+- Introduce API rate limits and request tracing for production-grade AI traffic control.
+- Expand e2e coverage from smoke testing to authenticated and editor workflows.
 
----
+## Security Considerations
 
-## 🤝 Contributing
+- Prefer `OPENAI_API_KEY` on server and `NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY=true` for hardened deployments.
+- Avoid long-term reliance on client-side key headers (`x-openai-key`) in public contexts.
+- Keep Clerk secret keys only in server-side environments and CI secrets.
+- Consider adding request validation and abuse protection on `/api/enhance` before high-volume deployment.
 
-Contributions are welcome! Please follow these steps:
+## Contributing Guidelines
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-4. **Push to the branch** (`git push origin feature/amazing-feature`)
-5. **Open a Pull Request**
+### Code Style and Standards
 
-### Development Guidelines
+- Use TypeScript-first changes for app logic.
+- Preserve existing import alias conventions (`@/`).
+- Keep changes small, reviewable, and scoped to a single concern.
+- Run lint, unit tests, and build before opening PR.
 
-- Write clean, readable TypeScript code
-- Follow the existing code style
-- Add comments for complex logic
-- Update documentation as needed
-- Test your changes thoroughly
-- Ensure all ESLint rules pass
+### Issue Reporting Protocol
 
----
+When opening an issue, include:
 
-## 📄 License
+1. Environment details (OS, Node version, package manager).
+2. Reproduction steps.
+3. Expected vs actual behavior.
+4. Logs or screenshots when relevant.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Pull Request Protocol
 
----
+1. Create a feature branch from `main`.
+2. Add or update tests for behavior changes.
+3. Update docs when implementation details change.
+4. Ensure CI passes (`lint`, `test:unit`, `build`, `test:e2e`).
+5. Use clear PR titles and include risk/rollback notes for non-trivial changes.
 
-## 🙏 Acknowledgments
+## Contribution Roadmap
 
-- **[Supabase](https://supabase.com/)** - Amazing backend platform
-- **[Shadcn/ui](https://ui.shadcn.com/)** - Beautiful component library
-- **[Radix UI](https://www.radix-ui.com/)** - Accessible primitives
-- **[Lucide](https://lucide.dev/)** - Icon library
-- **[Vite](https://vitejs.dev/)** - Lightning-fast build tool
-- **[Lovable](https://lovable.dev/)** - Project development platform
+Major features recommended for upcoming releases:
 
----
+1. Replace localStorage persistence with server-backed storage and user-scoped records.
+2. Expand `/api/enhance` with auth-aware quotas and structured telemetry.
+3. Add multi-step e2e coverage: sign-in, editor save flow, enhancement flow.
+4. Integrate richer dashboard analytics from persisted writing/session metrics.
+5. Improve frontend performance by migrating remaining `<img>` usage to optimized image handling.
+6. Add role-based admin controls for moderation and operational monitoring.
 
-## 📞 Support
+## License and Attribution
 
-- **Documentation**: Check the documentation files in the project root
-- **Project URL**: https://lovable.dev/projects/0aae388c-9aab-4870-bddf-985cf9597d63
+Current state: no `LICENSE` file is present in the repository root.
 
----
+Recommended open-source license: MIT.
 
-## 🚀 What's Next?
+MIT attribution requirements (if adopted):
 
-Future enhancements planned:
+- Include the full MIT license text in a `LICENSE` file.
+- Preserve copyright and permission notice in substantial source distributions.
+- Document third-party notices when required by dependency licenses.
 
-- [ ] Social authentication (Google, GitHub)
-- [ ] Two-factor authentication
-- [ ] AI-powered content generation
-- [ ] Team collaboration features
-- [ ] Browser extension
-- [ ] Mobile applications
-- [ ] Integration with Google Docs, Word
-- [ ] Advanced plagiarism detection
-- [ ] Citation generator
-- [ ] Writing templates library
-
----
-
-<div align="center">
-  <p>Made with ⚡ by the Zeus Team</p>
-</div>
+For strict compliance, add a committed `LICENSE` file before public distribution.
