@@ -86,7 +86,7 @@ Unique value proposition:
 
 - Clerk account and keys for authentication-enabled flows.
 - OpenAI API access for enhancement and analysis features.
-- Optional Vercel account/token for CD deployment.
+- Azure App Service for production deployment.
 
 ### Environment Variables
 
@@ -119,7 +119,7 @@ graph TD
     N[GitHub Actions CI] --> L
     N --> M
     N --> O[Next Build]
-    P[GitHub Actions CD] --> Q[Vercel Deploy]
+    P[GitHub Actions CD] --> R[Azure App Service Deploy]
 ```
 
 ## Project Structure
@@ -152,7 +152,7 @@ High-level structure and ownership boundaries:
 ├─ middleware.ts               # Clerk route protection and public route matcher
 ├─ .github/workflows/
 │  ├─ ci.yml                   # Lint/test/build/e2e automation
-│  └─ cd.yml                   # Optional Vercel deployment
+│  └─ azure-app-service.yml    # Azure App Service deployment
 ├─ vitest.config.ts
 ├─ playwright.config.ts
 └─ README.md
@@ -200,13 +200,12 @@ CI also injects dummy Clerk keys so auth-dependent pages do not fail build/test 
 
 ### CD Pipeline
 
-`/.github/workflows/cd.yml` executes on push to `main` and deploys to Vercel when secrets are available:
+`/.github/workflows/azure-app-service.yml` executes on push to `main` and deploys to Azure App Service when secrets are available:
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
+- `AZURE_WEBAPP_NAME`
+- `AZURE_WEBAPP_PUBLISH_PROFILE`
 
-Deployment is safely skipped when required Vercel secrets are not configured.
+Deployment is safely skipped when required Azure secrets are not configured.
 
 ## Setup and Local Development
 
@@ -303,13 +302,7 @@ curl -X POST http://localhost:8080/api/enhance \
 
 ## Deployment Options and Scalability Notes
 
-### Option 1: GitHub Actions CD to Vercel
-
-- Recommended for teams already using Vercel.
-- Uses `cd.yml` with secret-gated deployment.
-- Production deploy command: `npx vercel --prod --yes --token "$VERCEL_TOKEN"`.
-
-### Option 2: Self-Hosted Node Runtime
+### Option 1: Self-Hosted Node Runtime
 
 ```bash
 npm ci
@@ -319,11 +312,10 @@ npm run start
 
 This serves the standalone Next.js server and binds to the platform-provided `PORT` (defaults to 3000 when `PORT` is unset).
 
-### Option 3: GitHub Actions CD to Azure App Service
+### Option 2: GitHub Actions CD to Azure App Service
 
 - Uses `.github/workflows/azure-app-service.yml`.
 - Builds Next.js in standalone mode and deploys only the runtime artifact.
-- Designed for the same single-repo workflow used by Vercel.
 
 Required GitHub repository secrets:
 
