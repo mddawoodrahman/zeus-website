@@ -344,11 +344,14 @@ Recommended Azure App Settings:
   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
   - `CLERK_SECRET_KEY`
   - `OPENAI_API_KEY` (optional but recommended)
-5. If deployment fails:
+5. Configure App Service Health Check path:
+  - `/api/health`
+  - This repository includes `app/api/health/route.ts` for a lightweight 200 response.
+6. If deployment fails:
   - Check the GitHub workflow logs in Actions for build/package errors.
   - Check Azure App Service Log stream for runtime boot errors.
   - Ensure Node runtime is 20.x to match project `engines` and `.nvmrc`.
-6. Health check:
+7. Health check:
   - Open the site root URL and verify status 200.
   - Test `/api/enhance` with `{ "action": "config" }` to validate API route availability.
 
