@@ -317,7 +317,27 @@ npm run build
 npm run start
 ```
 
-This serves the built Next.js app on port 8080.
+This serves the standalone Next.js server and binds to the platform-provided `PORT` (defaults to 3000 when `PORT` is unset).
+
+### Option 3: GitHub Actions CD to Azure App Service
+
+- Uses `.github/workflows/azure-app-service.yml`.
+- Builds Next.js in standalone mode and deploys only the runtime artifact.
+- Designed for the same single-repo workflow used by Vercel.
+
+Required GitHub repository secrets:
+
+- `AZURE_WEBAPP_NAME` (your Azure Web App name)
+- `AZURE_WEBAPP_PUBLISH_PROFILE` (download publish profile XML from Azure portal)
+
+Recommended Azure App Settings:
+
+- `NODE_ENV=production`
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your value>`
+- `CLERK_SECRET_KEY=<your value>`
+- `OPENAI_API_KEY=<your value if using server-side proxy mode>`
+- `NEXT_PUBLIC_OPENAI_SERVER_PROXY=true`
+- `NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY=false` (or `true` for strict server-only mode)
 
 ### Scalability Notes
 

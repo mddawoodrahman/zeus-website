@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Zap, Sparkles, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const lightningIcon = "/assets/lightning-icon.png";
@@ -13,15 +14,19 @@ export const Hero = () => {
 
       {/* Animated Lightning Bolts */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img
+        <Image
           src={lightningIcon}
           alt=""
+          width={64}
+          height={64}
           className="absolute top-20 right-[10%] w-16 h-16 opacity-20 animate-pulse"
           style={{ animationDuration: "3s" }}
         />
-        <img
+        <Image
           src={lightningIcon}
           alt=""
+          width={48}
+          height={48}
           className="absolute bottom-32 left-[15%] w-12 h-12 opacity-10 animate-pulse"
           style={{ animationDuration: "4s", animationDelay: "1s" }}
         />

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { UserButton, useAuth } from "@clerk/nextjs";
 import { Zap } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -18,7 +19,13 @@ export const Header = () => {
           href="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <img src={zeusLogo} alt="Zeus" className="h-8 w-8" />
+          <Image
+            src={zeusLogo}
+            alt="Zeus"
+            width={32}
+            height={32}
+            className="h-8 w-8"
+          />
           <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             Zeus
           </span>
