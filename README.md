@@ -339,6 +339,27 @@ Recommended Azure App Settings:
 - `NEXT_PUBLIC_OPENAI_SERVER_PROXY=true`
 - `NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY=false` (or `true` for strict server-only mode)
 
+### Azure App Service Runbook (Quick Ops)
+
+1. Verify GitHub workflow secrets are set:
+  - `AZURE_WEBAPP_NAME`
+  - `AZURE_WEBAPP_PUBLISH_PROFILE`
+2. Trigger deployment by pushing to `main` or by running the `CD (Deploy to Azure App Service)` workflow manually.
+3. Confirm Azure startup command is not overriding app startup in the portal. This project starts from standalone output via:
+  - `node .next/standalone/server.js`
+4. Confirm required App Settings exist:
+  - `NODE_ENV=production`
+  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+  - `CLERK_SECRET_KEY`
+  - `OPENAI_API_KEY` (optional but recommended)
+5. If deployment fails:
+  - Check the GitHub workflow logs in Actions for build/package errors.
+  - Check Azure App Service Log stream for runtime boot errors.
+  - Ensure Node runtime is 20.x to match project `engines` and `.nvmrc`.
+6. Health check:
+  - Open the site root URL and verify status 200.
+  - Test `/api/enhance` with `{ "action": "config" }` to validate API route availability.
+
 ### Scalability Notes
 
 - Current localStorage persistence does not support multi-device sync; migrate to a managed datastore for horizontal scale.
