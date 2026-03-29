@@ -11,7 +11,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,6 +26,11 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # NEXT_PUBLIC_* must be present at build time
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_OPENAI_SERVER_PROXY: "true"
+          NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY: "false"
 
       - name: Prepare standalone package
         run: |
@@ -34,7 +38,14 @@ jobs:
           cp -R .next/standalone/* azure-deploy/
           cp -R .next/static azure-deploy/.next/static
           if [ -d public ]; then cp -R public azure-deploy/public; fi
-          node -e "const fs=require('fs'); const p='azure-deploy/package.json'; let j={name:'zeus-website-azure', private:true, scripts:{}}; if(fs.existsSync(p)){ j=JSON.parse(fs.readFileSync(p,'utf8')); j.scripts=j.scripts||{}; } j.scripts.start='node server.js'; fs.writeFileSync(p, JSON.stringify(j,null,2));"
+          node -e "
+            const fs=require('fs');
+            const p='azure-deploy/package.json';
+            let j={name:'zeus-website-azure',private:true,scripts:{}};
+            if(fs.existsSync(p)){ j=JSON.parse(fs.readFileSync(p,'utf8')); j.scripts=j.scripts||{}; }
+            j.scripts.start='node server.js';
+            fs.writeFileSync(p, JSON.stringify(j,null,2));
+          "
 
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
@@ -47,7 +58,6 @@ jobs:
     needs: build
     environment:
       name: production
-
     steps:
       - name: Check Azure secrets
         id: azure_secrets
@@ -56,7 +66,7 @@ jobs:
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Skipping deploy: missing AZURE_WEBAPP_NAME or AZURE_WEBAPP_PUBLISH_PROFILE."
+            echo "⚠️ Skipping deploy: missing AZURE_WEBAPP_NAME or AZURE_WEBAPP_PUBLISH_PROFILE"
           fi
 
       - name: Download deployment artifact
