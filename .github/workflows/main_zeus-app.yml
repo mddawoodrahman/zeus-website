@@ -76,7 +76,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: azure-app
-          path: azure-deploy
+          path: .
+
+      - name: Validate deployment package
+        if: steps.azure_secrets.outputs.ready == 'true'
+        run: |
+          echo "Inspecting deployment package structure..."
+          ls -la
+          ls -la azure-deploy || true
+
+          if [ ! -f azure-deploy/package.json ]; then
+            echo "Missing azure-deploy/package.json"
+            exit 1
+          fi
+
+          if [ ! -f azure-deploy/.next/standalone/server.js ]; then
+            echo "Missing azure-deploy/.next/standalone/server.js"
+            exit 1
+          fi
 
       - name: Deploy to Azure Web App
         if: steps.azure_secrets.outputs.ready == 'true'
