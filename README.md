@@ -43,7 +43,7 @@ Unique value proposition:
 
 - TypeScript
 - JavaScript (tooling/runtime scripts)
-- Node.js 20 (CI target runtime)
+- Node.js 24 (CI target runtime)
 
 ### Frameworks and Core Libraries
 
@@ -78,7 +78,7 @@ Unique value proposition:
 
 ### System Requirements
 
-- Node.js 20 or newer recommended.
+- Node.js 24 or newer recommended.
 - npm for automation and CI parity.
 - A modern browser for local verification.
 
@@ -188,7 +188,7 @@ This supports both API key validation and runtime feature negotiation for strict
 CI stages:
 
 1. Checkout
-2. Node.js 20 setup with npm cache
+2. Node.js 24 setup with npm cache
 3. `npm ci`
 4. `npm run lint`
 5. `npm run test:unit`
@@ -350,7 +350,7 @@ Recommended Azure App Settings:
 6. If deployment fails:
   - Check the GitHub workflow logs in Actions for build/package errors.
   - Check Azure App Service Log stream for runtime boot errors.
-  - Ensure Node runtime is 20.x to match project `engines` and `.nvmrc`.
+  - Ensure Node runtime is 24.x to match project `engines` and `.nvmrc`.
 7. Health check:
   - Open the site root URL and verify status 200.
   - Test `/api/enhance` with `{ "action": "config" }` to validate API route availability.
