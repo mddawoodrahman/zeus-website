@@ -36,7 +36,8 @@ jobs:
       - name: Prepare standalone package
         run: |
           mkdir -p azure-deploy/.next
-          cp -R .next/standalone/* azure-deploy/
+          # Keep Next.js standalone folder structure because app startup points to .next/standalone/server.js
+          cp -R .next/standalone azure-deploy/.next/standalone
           cp -R .next/static azure-deploy/.next/static
           if [ -d public ]; then cp -R public azure-deploy/public; fi
           node -e "
@@ -44,7 +45,7 @@ jobs:
             const p='azure-deploy/package.json';
             let j={name:'zeus-website-azure',private:true,scripts:{}};
             if(fs.existsSync(p)){ j=JSON.parse(fs.readFileSync(p,'utf8')); j.scripts=j.scripts||{}; }
-            j.scripts.start='node server.js';
+            j.scripts.start='node .next/standalone/server.js';
             fs.writeFileSync(p, JSON.stringify(j,null,2));
           "
 
