@@ -76,7 +76,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: azure-app
-          path: .
+          path: azure-deploy
 
       - name: Deploy to Azure Web App
         if: steps.azure_secrets.outputs.ready == 'true'
@@ -84,4 +84,4 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: azure-deploy
