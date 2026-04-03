@@ -64,38 +64,69 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      id-token: write
+      contents: read
     environment:
       name: production
     steps:
       - name: Check Azure secrets
         id: azure_secrets
         env:
+          AZURE_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_33AE70DD9594482CBA983F4B6DD7D243 }}
+          AZURE_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_EB6478FDEC9A43D19C081385A52CD7B3 }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D1D3891C478043F89DDF068736459764 }}
           AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
           AZURE_WEBAPP_SLOT_NAME: ${{ secrets.AZURE_WEBAPP_SLOT_NAME }}
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
-          if [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
+          if [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_TENANT_ID" ] && [ -n "$AZURE_SUBSCRIPTION_ID" ] && [ -n "$AZURE_WEBAPP_NAME" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "auth_mode=oidc" >> "$GITHUB_OUTPUT"
+            echo "✅ Using Azure OIDC/service principal deployment"
+          elif [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "auth_mode=publish_profile" >> "$GITHUB_OUTPUT"
+            echo "✅ Using publish profile deployment"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "⚠️ Skipping deploy: missing AZURE_WEBAPP_PUBLISH_PROFILE"
+            echo "auth_mode=none" >> "$GITHUB_OUTPUT"
+            echo "⚠️ Skipping deploy: provide Azure OIDC secrets + AZURE_WEBAPP_NAME, or AZURE_WEBAPP_PUBLISH_PROFILE"
           fi
 
-      - name: Resolve deploy target from publish profile
+      - name: Resolve deploy target
         if: steps.azure_secrets.outputs.ready == 'true'
         id: deploy_target
         env:
+          DEPLOY_AUTH_MODE: ${{ steps.azure_secrets.outputs.auth_mode }}
           AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
           AZURE_WEBAPP_SLOT_NAME: ${{ secrets.AZURE_WEBAPP_SLOT_NAME }}
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
           node -e "
             const fs = require('fs');
+            const authMode = (process.env.DEPLOY_AUTH_MODE || '').trim();
             const xml = (process.env.AZURE_WEBAPP_PUBLISH_PROFILE || '').trim();
             const configuredApp = (process.env.AZURE_WEBAPP_NAME || '').trim();
             const configuredSlot = (process.env.AZURE_WEBAPP_SLOT_NAME || '').trim();
+
+            if (authMode === 'oidc') {
+              if (!configuredApp) {
+                console.error('❌ AZURE_WEBAPP_NAME is required for OIDC deployment.');
+                process.exit(1);
+              }
+
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, 'app_name=' + configuredApp + '\\n');
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, 'slot_name=' + configuredSlot + '\\n');
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, 'auth_mode=oidc\\n');
+
+              const slotMsg = configuredSlot ? ', slot=' + configuredSlot : ', slot=production';
+              console.log('✅ Deploy target resolved for OIDC: app=' + configuredApp + slotMsg);
+              process.exit(0);
+            }
+
             if (!xml) {
-              console.error('❌ AZURE_WEBAPP_PUBLISH_PROFILE is empty.');
+              console.error('❌ AZURE_WEBAPP_PUBLISH_PROFILE is empty for publish-profile deployment.');
               process.exit(1);
             }
 
@@ -113,6 +144,7 @@ jobs:
 
             const msdeploySite = getAttr(msDeployTag, 'msdeploySite');
             const profileName = getAttr(msDeployTag, 'profileName');
+            const userNameAttr = getAttr(msDeployTag, 'userName');
 
             let inferredApp = '';
             let inferredSlot = '';
@@ -127,6 +159,17 @@ jobs:
               }
             }
 
+            if (!inferredApp && userNameAttr) {
+              const normalized = userNameAttr.startsWith('$') ? userNameAttr.slice(1) : userNameAttr;
+              const slotSep = normalized.indexOf('__');
+              if (slotSep > 0) {
+                inferredApp = normalized.slice(0, slotSep);
+                inferredSlot = inferredSlot || normalized.slice(slotSep + 2);
+              } else {
+                inferredApp = normalized;
+              }
+            }
+
             if (!inferredSlot && profileName) {
               const parts = profileName.split(' - ').map((s) => s.trim()).filter(Boolean);
               if (parts.length >= 3 && /web deploy/i.test(parts[parts.length - 1])) {
@@ -137,8 +180,8 @@ jobs:
               }
             }
 
-            const resolvedApp = configuredApp || inferredApp;
-            const resolvedSlot = configuredSlot || inferredSlot;
+            const resolvedApp = inferredApp || configuredApp;
+            const resolvedSlot = inferredSlot || configuredSlot;
 
             if (!resolvedApp) {
               console.error('❌ Could not determine app name from publish profile. Set AZURE_WEBAPP_NAME.');
@@ -159,10 +202,19 @@ jobs:
 
             fs.appendFileSync(process.env.GITHUB_OUTPUT, 'app_name=' + resolvedApp + '\\n');
             fs.appendFileSync(process.env.GITHUB_OUTPUT, 'slot_name=' + resolvedSlot + '\\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'auth_mode=publish_profile\\n');
 
             const slotMsg = resolvedSlot ? ', slot=' + resolvedSlot : ', slot=production';
-            console.log('✅ Deploy target resolved: app=' + resolvedApp + slotMsg);
+            console.log('✅ Deploy target resolved for publish profile: app=' + resolvedApp + slotMsg);
           "
+
+      - name: Azure login (OIDC)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.auth_mode == 'oidc'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_33AE70DD9594482CBA983F4B6DD7D243 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EB6478FDEC9A43D19C081385A52CD7B3 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D1D3891C478043F89DDF068736459764 }}
 
       - name: Download deployment artifact
         if: steps.azure_secrets.outputs.ready == 'true'
@@ -187,16 +239,31 @@ jobs:
           fi
           echo "✅ Package validation passed"
 
-      - name: Deploy to Azure Web App (production slot)
-        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.slot_name == ''
+      - name: Deploy to Azure Web App (production slot, OIDC)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.auth_mode == 'oidc' && steps.deploy_target.outputs.slot_name == ''
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ steps.deploy_target.outputs.app_name }}
+          package: azure-deploy
+
+      - name: Deploy to Azure Web App (named slot, OIDC)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.auth_mode == 'oidc' && steps.deploy_target.outputs.slot_name != ''
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ steps.deploy_target.outputs.app_name }}
+          slot-name: ${{ steps.deploy_target.outputs.slot_name }}
+          package: azure-deploy
+
+      - name: Deploy to Azure Web App (production slot, publish profile)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.auth_mode == 'publish_profile' && steps.deploy_target.outputs.slot_name == ''
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ steps.deploy_target.outputs.app_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: azure-deploy
 
-      - name: Deploy to Azure Web App (named slot)
-        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.slot_name != ''
+      - name: Deploy to Azure Web App (named slot, publish profile)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.auth_mode == 'publish_profile' && steps.deploy_target.outputs.slot_name != ''
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ steps.deploy_target.outputs.app_name }}
