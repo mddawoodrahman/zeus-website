@@ -67,8 +67,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    environment:
-      name: production
     steps:
       - name: Check Azure secrets
         id: azure_secrets
