@@ -32,23 +32,11 @@ jobs:
           NEXT_PUBLIC_OPENAI_SERVER_PROXY: "true"
           NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY: "false"
 
-      - name: Verify Next.js standalone output
-        run: |
-          if [ ! -d .next/standalone ]; then
-            echo "❌ .next/standalone not found — is output: 'standalone' set in next.config.ts?"
-            exit 1
-          fi
-          if [ ! -f .next/standalone/server.js ]; then
-            echo "❌ server.js missing from .next/standalone"
-            exit 1
-          fi
-          echo "✅ Standalone output confirmed"
-
       - name: Prepare standalone package
         run: |
           mkdir -p azure-deploy/.next
           cp -R .next/standalone azure-deploy/.next/standalone
-          cp -R .next/static    azure-deploy/.next/static
+          cp -R .next/static azure-deploy/.next/static
           if [ -d public ]; then cp -R public azure-deploy/public; fi
           node -e "
             const fs=require('fs');
@@ -63,7 +51,6 @@ jobs:
         run: |
           echo "--- azure-deploy structure ---"
           ls -la azure-deploy/
-          ls -la azure-deploy/.next/
           ls -la azure-deploy/.next/standalone/
           echo "server.js exists: $(test -f azure-deploy/.next/standalone/server.js && echo YES || echo NO)"
 
@@ -72,7 +59,7 @@ jobs:
         with:
           name: azure-app
           path: azure-deploy
-          include-hidden-files: true   # ✅ THE FIX — .next/ starts with dot, excluded by default
+          include-hidden-files: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -84,21 +71,105 @@ jobs:
         id: azure_secrets
         env:
           AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+          AZURE_WEBAPP_SLOT_NAME: ${{ secrets.AZURE_WEBAPP_SLOT_NAME }}
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
-          if [ -n "$AZURE_WEBAPP_NAME" ] && [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
+          if [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "⚠️ Skipping deploy: missing AZURE_WEBAPP_NAME or AZURE_WEBAPP_PUBLISH_PROFILE"
+            echo "⚠️ Skipping deploy: missing AZURE_WEBAPP_PUBLISH_PROFILE"
           fi
+
+      - name: Resolve deploy target from publish profile
+        if: steps.azure_secrets.outputs.ready == 'true'
+        id: deploy_target
+        env:
+          AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+          AZURE_WEBAPP_SLOT_NAME: ${{ secrets.AZURE_WEBAPP_SLOT_NAME }}
+          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const xml = (process.env.AZURE_WEBAPP_PUBLISH_PROFILE || '').trim();
+            const configuredApp = (process.env.AZURE_WEBAPP_NAME || '').trim();
+            const configuredSlot = (process.env.AZURE_WEBAPP_SLOT_NAME || '').trim();
+            if (!xml) {
+              console.error('❌ AZURE_WEBAPP_PUBLISH_PROFILE is empty.');
+              process.exit(1);
+            }
+
+            const tags = [...xml.matchAll(/<publishProfile\\b[^>]*>/gi)].map((m) => m[0]);
+            if (!tags.length) {
+              console.error('❌ AZURE_WEBAPP_PUBLISH_PROFILE is not valid publish profile XML.');
+              process.exit(1);
+            }
+
+            const msDeployTag = tags.find((t) => /publishMethod=\"MSDeploy\"/i.test(t)) || tags[0];
+            const getAttr = (tag, attr) => {
+              const m = tag.match(new RegExp(attr + '=\\\"([^\\\"]+)\\\"', 'i'));
+              return m ? m[1].trim() : '';
+            };
+
+            const msdeploySite = getAttr(msDeployTag, 'msdeploySite');
+            const profileName = getAttr(msDeployTag, 'profileName');
+
+            let inferredApp = '';
+            let inferredSlot = '';
+
+            if (msdeploySite) {
+              const slotSep = msdeploySite.indexOf('__');
+              if (slotSep > 0) {
+                inferredApp = msdeploySite.slice(0, slotSep);
+                inferredSlot = msdeploySite.slice(slotSep + 2);
+              } else {
+                inferredApp = msdeploySite;
+              }
+            }
+
+            if (!inferredSlot && profileName) {
+              const parts = profileName.split(' - ').map((s) => s.trim()).filter(Boolean);
+              if (parts.length >= 3 && /web deploy/i.test(parts[parts.length - 1])) {
+                if (!inferredApp) inferredApp = parts[0];
+                inferredSlot = parts.slice(1, parts.length - 1).join('-');
+              } else if (parts.length >= 2 && /web deploy/i.test(parts[parts.length - 1])) {
+                if (!inferredApp) inferredApp = parts[0];
+              }
+            }
+
+            const resolvedApp = configuredApp || inferredApp;
+            const resolvedSlot = configuredSlot || inferredSlot;
+
+            if (!resolvedApp) {
+              console.error('❌ Could not determine app name from publish profile. Set AZURE_WEBAPP_NAME.');
+              process.exit(1);
+            }
+
+            if (configuredApp && inferredApp && configuredApp !== inferredApp) {
+              console.error('❌ AZURE_WEBAPP_NAME does not match the provided publish profile app.');
+              console.error('   AZURE_WEBAPP_NAME=' + configuredApp + ', publishProfile=' + inferredApp);
+              process.exit(1);
+            }
+
+            if (configuredSlot && inferredSlot && configuredSlot !== inferredSlot) {
+              console.error('❌ AZURE_WEBAPP_SLOT_NAME does not match the provided publish profile slot.');
+              console.error('   AZURE_WEBAPP_SLOT_NAME=' + configuredSlot + ', publishProfile=' + inferredSlot);
+              process.exit(1);
+            }
+
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'app_name=' + resolvedApp + '\\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'slot_name=' + resolvedSlot + '\\n');
+
+            const slotMsg = resolvedSlot ? ', slot=' + resolvedSlot : ', slot=production';
+            console.log('✅ Deploy target resolved: app=' + resolvedApp + slotMsg);
+          "
 
       - name: Download deployment artifact
         if: steps.azure_secrets.outputs.ready == 'true'
         uses: actions/download-artifact@v4
         with:
           name: azure-app
-          path: azure-deploy
+          path: azure-deploy          
 
       - name: Validate deployment package
         if: steps.azure_secrets.outputs.ready == 'true'
@@ -116,10 +187,19 @@ jobs:
           fi
           echo "✅ Package validation passed"
 
-      - name: Deploy to Azure Web App
-        if: steps.azure_secrets.outputs.ready == 'true'
+      - name: Deploy to Azure Web App (production slot)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.slot_name == ''
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          app-name: ${{ steps.deploy_target.outputs.app_name }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: azure-deploy
+
+      - name: Deploy to Azure Web App (named slot)
+        if: steps.azure_secrets.outputs.ready == 'true' && steps.deploy_target.outputs.slot_name != ''
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ steps.deploy_target.outputs.app_name }}
+          slot-name: ${{ steps.deploy_target.outputs.slot_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: azure-deploy
