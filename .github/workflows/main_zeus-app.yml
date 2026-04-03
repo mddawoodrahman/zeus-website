@@ -78,14 +78,14 @@ jobs:
           AZURE_WEBAPP_SLOT_NAME: ${{ secrets.AZURE_WEBAPP_SLOT_NAME }}
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
-          if [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_TENANT_ID" ] && [ -n "$AZURE_SUBSCRIPTION_ID" ] && [ -n "$AZURE_WEBAPP_NAME" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-            echo "auth_mode=oidc" >> "$GITHUB_OUTPUT"
-            echo "✅ Using Azure OIDC/service principal deployment"
-          elif [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
+          if [ -n "$AZURE_WEBAPP_PUBLISH_PROFILE" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
             echo "auth_mode=publish_profile" >> "$GITHUB_OUTPUT"
             echo "✅ Using publish profile deployment"
+          elif [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_TENANT_ID" ] && [ -n "$AZURE_SUBSCRIPTION_ID" ] && [ -n "$AZURE_WEBAPP_NAME" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "auth_mode=oidc" >> "$GITHUB_OUTPUT"
+            echo "✅ Using Azure OIDC/service principal deployment"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
             echo "auth_mode=none" >> "$GITHUB_OUTPUT"
