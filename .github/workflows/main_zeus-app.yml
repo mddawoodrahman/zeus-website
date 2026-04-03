@@ -28,7 +28,6 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # NEXT_PUBLIC_* must be present at build time
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           NEXT_PUBLIC_OPENAI_SERVER_PROXY: "true"
           NEXT_PUBLIC_OPENAI_STRICT_SERVER_ONLY: "false"
@@ -36,7 +35,6 @@ jobs:
       - name: Prepare standalone package
         run: |
           mkdir -p azure-deploy/.next
-          # Keep Next.js standalone folder structure because app startup points to .next/standalone/server.js
           cp -R .next/standalone azure-deploy/.next/standalone
           cp -R .next/static azure-deploy/.next/static
           if [ -d public ]; then cp -R public azure-deploy/public; fi
@@ -48,6 +46,13 @@ jobs:
             j.scripts.start='node .next/standalone/server.js';
             fs.writeFileSync(p, JSON.stringify(j,null,2));
           "
+
+      - name: Verify build output
+        run: |
+          echo "--- azure-deploy structure ---"
+          ls -la azure-deploy/
+          ls -la azure-deploy/.next/standalone/
+          echo "server.js exists: $(test -f azure-deploy/.next/standalone/server.js && echo YES || echo NO)"
 
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
@@ -79,24 +84,23 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: azure-app
-          path: .
+          path: azure-deploy          
 
       - name: Validate deployment package
         if: steps.azure_secrets.outputs.ready == 'true'
         run: |
           echo "Inspecting deployment package structure..."
-          ls -la
-          ls -la azure-deploy || true
-
+          ls -la azure-deploy/
+          ls -la azure-deploy/.next/standalone/ || echo "standalone dir missing!"
           if [ ! -f azure-deploy/package.json ]; then
-            echo "Missing azure-deploy/package.json"
+            echo "❌ Missing azure-deploy/package.json"
             exit 1
           fi
-
           if [ ! -f azure-deploy/.next/standalone/server.js ]; then
-            echo "Missing azure-deploy/.next/standalone/server.js"
+            echo "❌ Missing azure-deploy/.next/standalone/server.js"
             exit 1
           fi
+          echo "✅ Package validation passed"
 
       - name: Deploy to Azure Web App
         if: steps.azure_secrets.outputs.ready == 'true'
