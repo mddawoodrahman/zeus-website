@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -59,7 +59,7 @@ jobs:
           echo "server.js exists: $(test -f azure-deploy/.next/standalone/server.js && echo YES || echo NO)"
 
       - name: Upload deployment artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: azure-app
           path: azure-deploy
@@ -220,7 +220,7 @@ jobs:
 
       - name: Download deployment artifact
         if: steps.azure_secrets.outputs.ready == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: azure-app
           path: azure-deploy          
