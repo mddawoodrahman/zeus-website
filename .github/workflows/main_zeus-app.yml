@@ -36,8 +36,9 @@ jobs:
         run: |
           mkdir -p azure-deploy/.next
           cp -R .next/standalone azure-deploy/.next/standalone
-          cp -R .next/static azure-deploy/.next/static
-          if [ -d public ]; then cp -R public azure-deploy/public; fi
+          mkdir -p azure-deploy/.next/standalone/.next
+          cp -R .next/static azure-deploy/.next/standalone/.next/static
+          if [ -d public ]; then cp -R public azure-deploy/.next/standalone/public; fi
           node -e "
             const fs=require('fs');
             const p='azure-deploy/package.json';
@@ -52,6 +53,9 @@ jobs:
           echo "--- azure-deploy structure ---"
           ls -la azure-deploy/
           ls -la azure-deploy/.next/standalone/
+          ls -la azure-deploy/.next/standalone/.next/
+          ls -la azure-deploy/.next/standalone/.next/static/ || true
+          ls -la azure-deploy/.next/standalone/public/ || true
           echo "server.js exists: $(test -f azure-deploy/.next/standalone/server.js && echo YES || echo NO)"
 
       - name: Upload deployment artifact
@@ -227,12 +231,17 @@ jobs:
           echo "Inspecting deployment package structure..."
           ls -la azure-deploy/
           ls -la azure-deploy/.next/standalone/ || echo "standalone dir missing!"
+          ls -la azure-deploy/.next/standalone/.next/static/ || echo "standalone static dir missing!"
           if [ ! -f azure-deploy/package.json ]; then
             echo "❌ Missing azure-deploy/package.json"
             exit 1
           fi
           if [ ! -f azure-deploy/.next/standalone/server.js ]; then
             echo "❌ Missing azure-deploy/.next/standalone/server.js"
+            exit 1
+          fi
+          if [ ! -d azure-deploy/.next/standalone/.next/static ]; then
+            echo "❌ Missing azure-deploy/.next/standalone/.next/static"
             exit 1
           fi
           echo "✅ Package validation passed"
