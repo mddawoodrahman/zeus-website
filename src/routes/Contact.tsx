@@ -319,29 +319,6 @@ const Contact = () => {
                 </div>
               </Card>
 
-              {/* Social Proof */}
-              <Card className="p-6">
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 mb-4">
-                    <MessageSquare className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Join Our Community
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Connect with other Zeus users, share tips, and get help from
-                    our community.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button variant="outline" className="flex-1">
-                      Discord Community
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      Twitter
-                    </Button>
-                  </div>
-                </div>
-              </Card>
             </div>
           </div>
         </div>
