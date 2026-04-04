@@ -77,7 +77,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://chromewebstore.google.com/detail/zeus/nejhojapbopmedoagaimcdmgekjnkoal"
+                  href="https://github.com/mddawoodrahman/zeus"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-foreground transition-colors"
@@ -87,7 +87,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://github.com/mddawoodrahman/zeus"
+                  href="https://chromewebstore.google.com/detail/zeus/nejhojapbopmedoagaimcdmgekjnkoal"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-foreground transition-colors"
