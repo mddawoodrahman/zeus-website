@@ -31,8 +31,8 @@ export const Footer = () => {
 
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Github, href: "https://lnkd.in/dspWKsAi" },
-                { icon: Globe, href: "https://lnkd.in/efA29y5h" },
+                { icon: Github, href: "https://github.com/mddawoodrahman/zeus" },
+                { icon: Globe, href: "https://chromewebstore.google.com/detail/zeus/nejhojapbopmedoagaimcdmgekjnkoal" },
               ].map(({ icon: Icon, href }, idx) => (
                 <a
                   key={idx}
@@ -77,7 +77,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://lnkd.in/dspWKsAi"
+                  href="https://chromewebstore.google.com/detail/zeus/nejhojapbopmedoagaimcdmgekjnkoal"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-foreground transition-colors"
@@ -87,7 +87,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://lnkd.in/efA29y5h"
+                  href="https://github.com/mddawoodrahman/zeus"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-foreground transition-colors"
