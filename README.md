@@ -3,7 +3,25 @@
 <p align="center">
   <img src="./public/screenshots/landing.png" width="900"/>
 </p>
-<p align="center"><em>Zeus landing experience and product overview.</em></p>
+
+<p align="center">
+  <b>AI-Powered Writing Assistant + Chrome Extension</b><br/>
+  Built with Next.js, OpenAI, Clerk & Azure
+</p>
+
+<p align="center">
+  <a href="https://zeus-app.azurewebsites.net/">🌐 Live Demo</a> •
+  <a href="#project-overview">📖 Docs</a> •
+  <a href="#tech-stack">⚙️ Tech Stack</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js"/>
+  <img src="https://img.shields.io/badge/React-18-blue?logo=react"/>
+  <img src="https://img.shields.io/badge/OpenAI-GPT-green"/>
+  <img src="https://img.shields.io/badge/Auth-Clerk-purple"/>
+  <img src="https://img.shields.io/badge/Deployed%20on-Azure-blue"/>
+</p>
 
 Zeus Website is a Next.js App Router application that combines a marketing surface, authenticated user flows, and an AI-assisted text editor. The project is designed for iterative product delivery with modern frontend tooling, test automation, and CI/CD workflows.
 
@@ -11,7 +29,7 @@ Zeus Website is a Next.js App Router application that combines a marketing surfa
 
 - [Project Overview](#project-overview)
 - [Recent Changes (April 2026)](#recent-changes-april-2026)
-- [Chrome Extension Integration](#chrome-extension-integration)
+- [Chrome Extension](#chrome-extension)
 - [Tech Stack](#tech-stack)
 - [Dependencies and Requirements](#dependencies-and-requirements)
 - [Project Structure](#project-structure)
@@ -30,13 +48,13 @@ Zeus Website is a Next.js App Router application that combines a marketing surfa
 
 Zeus provides two primary value streams:
 
-1. A conversion-oriented marketing site for the Zeus ecosystem and Chrome extension distribution.
-2. A writing and prompt enhancement experience where users can analyze and improve text with OpenAI-backed processing.
-
 <p align="center">
   <img src="./public/screenshots/landing.png" width="700"/>
 </p>
 <p align="center"><em>Landing page experience focused on product value and conversion.</em></p>
+
+1. A conversion-oriented marketing site for the Zeus ecosystem and Chrome extension distribution.
+2. A writing and prompt enhancement experience where users can analyze and improve text with OpenAI-backed processing.
 
 Key product features:
 
@@ -46,7 +64,11 @@ Key product features:
 - Local persistence of editor artifacts through `localStorage` data abstractions.
 - Test automation across unit and browser-level e2e flows.
 
-### ✍️ AI Editor Experience
+## ✨ Core Experience
+
+### ✍️ AI Editor
+
+Enhance, analyze, and transform text using AI-powered workflows.
 
 <p align="center">
   <img src="./public/screenshots/editor.png" width="800"/>
@@ -64,11 +86,9 @@ Unique value proposition:
 - Simplified the About page by removing the Stats, Team, Journey, Recognition & Awards, and final CTA sections.
 - Simplified the Footer by removing the newsletter subscription block ("Stay Updated").
 
-<a id="chrome-extension-integration"></a>
+## 🧩 Chrome Extension
 
-## 🧩 Chrome Extension Integration
-
-Show how the extension connects with the platform.
+Seamlessly integrate Zeus into your browser for real-time writing enhancement.
 
 <p align="center">
   <img src="./public/screenshots/extension.png" width="800"/>
