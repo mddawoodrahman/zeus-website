@@ -1,34 +1,37 @@
 import { Card } from "@/components/ui/card";
-import { FileText, Sparkles, CheckCircle, Download } from "lucide-react";
+import {
+  FileText,
+  Sparkles,
+  CheckCircle,
+  Download,
+  Settings2,
+  ShieldCheck,
+} from "lucide-react";
 
 const steps = [
   {
     icon: FileText,
-    title: "Draft Any Prompt",
+    title: "Write a Prompt in a Supported Chat App",
     description:
-      "Write a simple prompt inside ChatGPT, Claude, Gemini, DeepSeek, or Grok.",
-    number: "",
+      "Open ChatGPT, Claude, Gemini, DeepSeek, or Grok and draft a simple prompt in the message box.",
   },
   {
     icon: Sparkles,
-    title: "Click Enhance Prompt",
+    title: "Click the Zeus Enhance Button",
     description:
-      "Use the Zeus button to instantly rewrite your prompt into a structured, high-performing version.",
-    number: "",
+      "Zeus adds a lightweight overlay button directly beside eligible input fields, so you can improve prompts without leaving the page.",
+  },
+  {
+    icon: Settings2,
+    title: "Choose a Provider or Use Auto Mode",
+    description:
+      "Select OpenAI, Gemini, Claude, OpenRouter, or Ollama in the popup, or let Auto mode route your prompt with fallback handling.",
   },
   {
     icon: CheckCircle,
-    title: "Choose Your Provider",
+    title: "Send the Improved Prompt and Iterate",
     description:
-      "Run with OpenAI, Gemini, Claude, OpenRouter, Ollama, or Auto mode with local-first fallback.",
-    number: "",
-  },
-  {
-    icon: Download,
-    title: "Use and Iterate",
-    description:
-      "Send the upgraded prompt and iterate faster with better quality answers from any model.",
-    number: "",
+      "Zeus rewrites your prompt for clarity and structure, then returns it to the input field so you can send it and refine faster.",
   },
 ];
 
@@ -38,17 +41,14 @@ export const HowItWorks = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Prompt Excellence in{" "}
-            <span className="bg-gradient-gold bg-clip-text text-transparent">
-              4 Simple Steps
-            </span>
+            How Zeus Works in <span className="bg-gradient-gold bg-clip-text text-transparent">4 Steps</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            From raw idea to high-performance prompt in seconds.
+            From a rough idea to a stronger prompt, directly inside your favorite AI chat app.
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8">
             {steps.map((step, index) => {
               const Icon = step.icon;
@@ -57,16 +57,14 @@ export const HowItWorks = () => {
                   key={index}
                   className="p-8 relative overflow-hidden hover:shadow-strong transition-all duration-300 group"
                 >
-                  <div className="absolute top-4 right-4 text-6xl font-bold text-primary/5 group-hover:text-primary/10 transition-colors">
-                    {step.number}
-                  </div>
+                  
+
                   <div className="relative">
                     <div className="h-14 w-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="h-7 w-7 text-primary-foreground" />
                     </div>
-                    <h3 className="text-2xl font-semibold mb-3">
-                      {step.title}
-                    </h3>
+
+                    <h3 className="text-2xl font-semibold mb-3">{step.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {step.description}
                     </p>
@@ -75,6 +73,22 @@ export const HowItWorks = () => {
               );
             })}
           </div>
+
+          <Card className="mt-10 p-8 border-dashed">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center shrink-0">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-1">Built for clean integration and reliable results</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Zeus keeps provider logic, settings, and site-specific behavior separated under the hood, with retry and fallback support to help keep your workflow moving.
+                </p>
+              </div>
+              <div className="md:ml-auto">
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </section>

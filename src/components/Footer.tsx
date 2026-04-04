@@ -1,4 +1,4 @@
-import { Github, Globe, Mail } from "lucide-react";
+import { Github, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export const Footer = () => {
     <footer className="border-t border-border bg-gradient-to-b from-muted/40 via-muted/30 to-background text-muted-foreground">
       <div className="container mx-auto px-6 py-14">
         {/* Top Section */}
-        <div className="grid gap-10 md:grid-cols-5">
+        <div className="grid gap-10 md:grid-cols-4">
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
@@ -120,38 +120,9 @@ export const Footer = () => {
                   Careers
                 </a>
               </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Contact
-                </Link>
-              </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Stay Updated</h3>
-            <p className="text-sm mb-3">
-              Join our newsletter for product updates, AI tips, and exclusive
-              beta access.
-            </p>
-            <form className="flex items-center border border-border rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary/40 transition">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 bg-transparent px-3 py-2 text-sm outline-none"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition"
-              >
-                <Mail className="h-4 w-4" />
-              </button>
-            </form>
-          </div>
         </div>
 
         {/* Bottom Section */}

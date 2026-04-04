@@ -5,6 +5,7 @@ Zeus Website is a Next.js App Router application that combines a marketing surfa
 ## Table of Contents
 
 - [Project Overview](#project-overview)
+- [Recent Changes (April 2026)](#recent-changes-april-2026)
 - [Tech Stack](#tech-stack)
 - [Dependencies and Requirements](#dependencies-and-requirements)
 - [Project Structure](#project-structure)
@@ -36,6 +37,13 @@ Key product features:
 Unique value proposition:
 
 - The system supports server-proxy-first AI calls while preserving a compatibility fallback path for browser-side key usage during transition periods. This enables gradual hardening without abrupt user impact.
+
+## Recent Changes (April 2026)
+
+- Removed the Contact page route and component (`app/contact/page.tsx` and `src/routes/Contact.tsx`).
+- Removed all `/contact` references from navigation and route protection (`src/components/Header.tsx`, `src/components/Footer.tsx`, `src/routes/About.tsx`, and `middleware.ts`).
+- Simplified the About page by removing the Stats, Team, Journey, Recognition & Awards, and final CTA sections.
+- Simplified the Footer by removing the newsletter subscription block ("Stay Updated").
 
 ## Tech Stack
 
@@ -131,7 +139,6 @@ High-level structure and ownership boundaries:
 ├─ app/                        # Next.js App Router entrypoints and API routes
 │  ├─ api/enhance/route.ts     # OpenAI proxy endpoint (analyze/enhance/complete)
 │  ├─ about/page.tsx
-│  ├─ contact/page.tsx
 │  ├─ dashboard/page.tsx
 │  ├─ editor/page.tsx
 │  ├─ signin/page.tsx
